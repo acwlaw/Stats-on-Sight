@@ -33,7 +33,7 @@ class RectangleDetector {
             }
         })
     }
-    
+     
     /// Search for rectangles in the camera's pixel buffer if a search is not already running
     /// - Tag: SerializeVision
     private func search(in pixelBuffer: CVPixelBuffer) {
