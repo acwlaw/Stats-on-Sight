@@ -9,6 +9,7 @@
 import Foundation
 import Vision
 import CoreImage
+import UIKit
 
 protocol RectangleDetectorDelegate: class {
     func rectangleFound(rectangleContent: CIImage)
@@ -119,6 +120,91 @@ class RectangleDetector {
             return
         }
         
+        analyzeImage(for: perspectiveImage)
         delegate?.rectangleFound(rectangleContent: perspectiveImage)
+    }
+    
+    func analyzeImage(for image: CIImage) {
+        guard let url = URL(string: "http://stats-on-sight.appspot.com/upload") else {
+            print("Unable to create a URL from given string")
+            return
+        }
+        
+        guard let uiImage = image.convertToUIImage().rotate(radians: .pi/2),
+            let imageData = uiImage.jpegData(compressionQuality: 1) else {
+            print("Unable to get image data")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+        
+        sendFile(url: url, fileName: "file.jpg", data: imageData) { (response, data, error) in
+            print("RESPONSE: \(String(describing: response))")
+            print("DATA: \(String(data: data!, encoding: String.Encoding.utf8))")
+        }
+    }
+    
+    func sendFile(url: URL, fileName: String, data: Data, completionHandler: @escaping (URLResponse?, Data?, Error?) -> Void) {
+
+        let request1: NSMutableURLRequest = NSMutableURLRequest(url: url)
+
+        request1.httpMethod = "POST"
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        let fullData = photoDataToFormData(data: data, boundary: boundary, fileName: fileName)
+
+        request1.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
+
+        // REQUIRED!
+        request1.setValue(String(fullData.count), forHTTPHeaderField: "Content-Length")
+
+        request1.httpBody = fullData
+        request1.httpShouldHandleCookies = false
+
+        let queue: OperationQueue = OperationQueue()
+
+        NSURLConnection.sendAsynchronousRequest(request1 as URLRequest, queue: queue, completionHandler: completionHandler)
+    }
+    
+    func photoDataToFormData(data: Data, boundary: String, fileName: String) -> Data {
+        let fullData = NSMutableData()
+
+        // 1 - Boundary should start with --
+        let lineOne = "--" + boundary + "\r\n"
+        fullData.append(lineOne.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 2
+        let lineTwo = "Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"\r\n"
+        NSLog(lineTwo)
+        fullData.append(lineTwo.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 3
+        let lineThree = "Content-Type: image/jpg\r\n\r\n"
+        fullData.append(lineThree.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 4
+        fullData.append(data as Data)
+
+        // 5
+        let lineFive = "\r\n"
+        fullData.append(lineFive.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 6 - The end. Notice -- at the start and at the end
+        let lineSix = "--" + boundary + "--\r\n"
+        fullData.append(lineSix.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        return fullData as Data
     }
 }
