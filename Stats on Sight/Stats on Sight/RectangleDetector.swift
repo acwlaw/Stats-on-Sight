@@ -55,25 +55,27 @@ class RectangleDetector {
         request.maximumObservations = 1
         
         // Require rectangles to be reasonably large.
-        request.minimumConfidence = 0.90
+        request.minimumConfidence = 0.95
         
         // Ignore rectangles with a too uneven aspect ratio.
-        request.minimumAspectRatio = 0.3
+        request.minimumAspectRatio = 0.5
         
         // Ignore rectangles that are skewed too much.
-        request.quadratureTolerance = 20
+        request.quadratureTolerance = 10
         
         // You leverage the `usesCPUOnly` flag of `VNRequest` to decide whether your Vision requests are processed on the CPU or GPU.
         // This sample disables `usesCPUOnly` because rectangle detection isn't very taxing on the GPU. You may benefit by enabling
         // `usesCPUOnly` if your app does a lot of rendering, or runs a complicated neural network.
         request.usesCPUOnly = false
         
-        DispatchQueue.global().async {
-            do {
-                try handler.perform([request])
-            } catch {
-                print("Error: Rectangle detection failed - vision request failed.")
-                
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.global().async {
+                do {
+                    try handler.perform([request])
+                } catch {
+                    print("Error: Rectangle detection failed - vision request failed.")
+                    
+                }
             }
         }
     }
