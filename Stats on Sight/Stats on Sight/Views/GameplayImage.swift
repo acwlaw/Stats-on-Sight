@@ -51,23 +51,53 @@ class GameplayImage {
             
             // Start the image tracking timeout.
             resetImageTrackingTimeout()
+            let plane = SCNPlane(width: CGFloat(referenceImage.physicalSize.width),
+                                     height: CGFloat(referenceImage.physicalSize.height))
             
-            let path = UIBezierPath()
-            path.move(to: CGPoint(x: 0.1, y: 0.1))
-            path.addLine(to: CGPoint(x: 0.1, y: -0.1))
-            path.addLine(to: CGPoint(x: -0.1, y: -0.1))
-            path.addLine(to: CGPoint(x: -0.1, y: 0.1))
-            path.close()
+            let planeNode = SCNNode(geometry: plane)
+            planeNode.simdTransform = simd_float4x4(SCNMatrix4MakeTranslation(0, 0, -0.355))
+            planeNode.eulerAngles.x = -.pi/2
             
-            let shape = SCNShape(path: path, extrusionDepth: 0.2)
-            let color = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-            shape.firstMaterial?.diffuse.contents = color
-            shape.chamferRadius = 0.1
+            let text = SCNText(string: "5 - 1", extrusionDepth: 0.1)
+            text.font = UIFont(name: "Arial", size: 20)
+            text.isWrapped = true
+            let textNode = SCNNode(geometry: text)
             
-            let squareNode = SCNNode(geometry: shape)
-            squareNode.position.z = -1
+            text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 100.0))
+            textNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
             
-            node.addChildNode(squareNode)
+            
+            textNode.eulerAngles.x = -.pi/2
+//            textNode.simdTransform = simd_float4x4(SCNMatrix4MakeTranslation(0, 0, -0.355))
+//            textNode.simdTransform = simd_float4x4(SCNMatrix4MakeTranslation(0, 0, 0))
+            
+            let (min, max) = textNode.boundingBox
+            
+            let dx = min.x + 0.5 * (max.x - min.x)
+            let dy = min.y + 0.5 * (max.y - min.y) - 25
+            let dz = min.z + 0.5 * (max.z - min.z)
+            textNode.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+            
+            
+            
+            
+//            let path = UIBezierPath()
+//            path.move(to: CGPoint(x: 0.1, y: 0.1))
+//            path.addLine(to: CGPoint(x: 0.1, y: -0.1))
+//            path.addLine(to: CGPoint(x: -0.1, y: -0.1))
+//            path.addLine(to: CGPoint(x: -0.1, y: 0.1))
+//            path.close()
+//
+//            let shape = SCNShape(path: path, extrusionDepth: 0.2)
+//            let color = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+//            shape.firstMaterial?.diffuse.contents = color
+//            shape.chamferRadius = 0.1
+//
+//            let squareNode = SCNNode(geometry: shape)
+//            squareNode.position.z = -1
+            
+//            node.addChildNode(planeNode)
+            node.addChildNode(textNode)
             
 //            delegate?.placeNodeInScene(for: squareNode)
             

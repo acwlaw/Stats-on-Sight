@@ -70,8 +70,8 @@ class RectangleDetector {
         request.minimumConfidence = 0.90
         
         // Ignore rectangles with a too uneven aspect ratio.
-        request.minimumAspectRatio = 0.35
-        request.maximumAspectRatio = 0.75
+        request.minimumAspectRatio = 0.50
+        request.maximumAspectRatio = 0.80
         
         // Ignore rectangles that are skewed too much.
         request.quadratureTolerance = 10
@@ -160,7 +160,7 @@ class RectangleDetector {
         request.httpMethod = "POST"
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         
-        sendFile(url: url, fileName: "file.jpg", data: imageData) { (response, data, error) in
+        sendFile(url: url, fileName: "file.jpg", data: imageData) { (data, response, error) in
             self.delegate?.stopAnimatingLoadingIndicator()
             
             guard let data = data else {
@@ -186,9 +186,9 @@ class RectangleDetector {
         }
     }
     
-    func sendFile(url: URL, fileName: String, data: Data, completionHandler: @escaping (URLResponse?, Data?, Error?) -> Void) {
+    func sendFile(url: URL, fileName: String, data: Data, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
 
-        let request1: NSMutableURLRequest = NSMutableURLRequest(url: url)
+        var request1: URLRequest = URLRequest(url: url)
 
         request1.httpMethod = "POST"
 
@@ -201,11 +201,13 @@ class RectangleDetector {
         request1.setValue(String(fullData.count), forHTTPHeaderField: "Content-Length")
 
         request1.httpBody = fullData
-        request1.httpShouldHandleCookies = false
-
-        let queue: OperationQueue = OperationQueue()
-
-        NSURLConnection.sendAsynchronousRequest(request1 as URLRequest, queue: queue, completionHandler: completionHandler)
+        request1.httpShouldHandleCookies = true
+        
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
+        
+        let task = session.dataTask(with: request1, completionHandler: completionHandler)
+        
+        task.resume()
     }
     
     func photoDataToFormData(data: Data, boundary: String, fileName: String) -> Data {
