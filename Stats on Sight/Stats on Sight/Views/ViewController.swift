@@ -10,6 +10,10 @@ import UIKit
 import SceneKit
 import ARKit
 
+protocol ViewControllerDelegate: class {
+    func retrySearch()
+}
+
 class ViewController: UIViewController {
 
     @IBOutlet var sceneView: ARSCNView!
@@ -18,8 +22,18 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var loadingPanel: UIView!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
-      
+    
+    @IBOutlet weak var buttonPanel: UIView!
+    @IBOutlet weak var buttonIndicator: UIButton!
+    
+    @IBAction func retryButtonTapped(_ sender: Any) {
+        delegate?.retrySearch()
+    }
+    
     static var instance: ViewController?
+    
+    weak var delegate: ViewControllerDelegate?
+    
     var currentFollowedGameLabelText = ""
     
     var hasLoadedGame = false {
@@ -124,6 +138,15 @@ class ViewController: UIViewController {
     }
     
     private func setLoadingHidden(_ hide: Bool) {
+        loadingPanel.isHidden = hide
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState], animations: {
+                self.loadingPanel.alpha = hide ? 0 : 1
+            })
+        }
+    }
+    
+    private func setRetryHidden(_ hide: Bool ) {
         loadingPanel.isHidden = hide
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState], animations: {
@@ -239,6 +262,12 @@ extension ViewController: RectangleDetectorDelegate {
         
         DispatchQueue.main.async {
             self.showMessage(string, autoHide: autohide)
+        }
+    }
+    
+    func showButton() {
+        DispatchQueue.main.async {
+            self.setRetryHidden(false)
         }
     }
 

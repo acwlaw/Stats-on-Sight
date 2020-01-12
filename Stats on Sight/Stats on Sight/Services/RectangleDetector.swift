@@ -16,6 +16,7 @@ protocol RectangleDetectorDelegate: class {
     func startAnimatingLoadingIndicator()
     func stopAnimatingLoadingIndicator()
     func showMessage(_ string: String, autohide: Bool)
+    func showButton()
 }
 
 class RectangleDetector {
@@ -28,6 +29,8 @@ class RectangleDetector {
     
     private var isBusy = false
     
+    private var hasFoundPotentialImage = false
+    
     weak var delegate: RectangleDetectorDelegate?
     
     init() {
@@ -35,6 +38,7 @@ class RectangleDetector {
     }
     
     func initiateSearch() {
+        ViewController.instance?.delegate = self
         self.updateTimer = Timer.scheduledTimer(withTimeInterval: self.updateInterval, repeats: true, block: { [weak self] _ in
             if let capturedImage = ViewController.instance?.sceneView.session.currentFrame?.capturedImage {
                 self?.search(in: capturedImage)
@@ -127,8 +131,12 @@ class RectangleDetector {
             print("Error: Rectangle detection failed - perspective correction filter has no output image.")
             return
         }
+    
         
-        analyzeImage(for: perspectiveImage)
+        if !hasFoundPotentialImage {
+            hasFoundPotentialImage = true
+            analyzeImage(for: perspectiveImage)
+        }
     }
     
     func analyzeImage(for image: CIImage) {
@@ -156,6 +164,8 @@ class RectangleDetector {
             self.delegate?.stopAnimatingLoadingIndicator()
             
             guard let data = data else {
+                self.delegate?.showButton()
+                self.hasFoundPotentialImage = false
                 print("No data")
                 return
             }
@@ -163,6 +173,8 @@ class RectangleDetector {
             print(String(data: data, encoding: String.Encoding.utf8))
                 
             guard let payload = try? JSONDecoder().decode(Payload.self, from: data) else {
+                self.delegate?.showButton()
+                self.hasFoundPotentialImage = false
                 print("Unable to decode payload")
                 return
             }
@@ -234,5 +246,12 @@ class RectangleDetector {
             allowLossyConversion: false)!)
 
         return fullData as Data
+    }
+}
+
+extension RectangleDetector: ViewControllerDelegate {
+    func retrySearch() {
+        print("Search is reattempted")
+        initiateSearch()
     }
 }

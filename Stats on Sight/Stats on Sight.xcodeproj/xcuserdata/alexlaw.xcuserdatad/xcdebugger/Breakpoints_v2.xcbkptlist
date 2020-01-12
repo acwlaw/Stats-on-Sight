@@ -23,16 +23,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FCF7A938-B550-4138-A766-8BE6612EB69D"
+            uuid = "7613C52D-50B1-42CF-BE48-B8536DD7212F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Stats on Sight/Services/RectangleDetector.swift"
+            filePath = "Stats on Sight/Views/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "init()"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "retryButtonTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

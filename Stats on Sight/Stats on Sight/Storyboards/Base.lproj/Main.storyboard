@@ -116,21 +116,71 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
+                            <visualEffectView hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="za4-Wp-owb" userLabel="Retry Panel">
+                                <rect key="frame" x="344" y="792" width="40" height="40"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="xt8-3b-2f9">
+                                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bhb-bd-bjP">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Huy-VE-kdz">
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pAf-2o-nLA">
+                                                        <rect key="frame" x="11" y="9" width="18" height="22"/>
+                                                        <state key="normal" image="arrow.clockwise" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="retryButtonTapped:" destination="BV1-FR-VrT" eventType="touchUpInside" id="1ga-h4-O7a"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="pAf-2o-nLA" firstAttribute="centerX" secondItem="Huy-VE-kdz" secondAttribute="centerX" id="kkr-de-c2q"/>
+                                                    <constraint firstItem="pAf-2o-nLA" firstAttribute="centerY" secondItem="Huy-VE-kdz" secondAttribute="centerY" id="zvn-o6-soP"/>
+                                                </constraints>
+                                            </view>
+                                            <vibrancyEffect>
+                                                <blurEffect style="extraLight"/>
+                                            </vibrancyEffect>
+                                        </visualEffectView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="Bhb-bd-bjP" firstAttribute="width" secondItem="za4-Wp-owb" secondAttribute="width" id="3gX-d2-BH8"/>
+                                    <constraint firstItem="Bhb-bd-bjP" firstAttribute="centerX" secondItem="za4-Wp-owb" secondAttribute="centerX" id="Cwn-pl-fBJ"/>
+                                    <constraint firstItem="Bhb-bd-bjP" firstAttribute="centerY" secondItem="za4-Wp-owb" secondAttribute="centerY" id="Ov8-Uo-WP3"/>
+                                    <constraint firstAttribute="height" constant="40" id="TV3-vg-pHz"/>
+                                    <constraint firstItem="Bhb-bd-bjP" firstAttribute="height" secondItem="za4-Wp-owb" secondAttribute="height" id="UL4-ry-1Wy"/>
+                                    <constraint firstAttribute="width" constant="40" id="n2D-Wq-jQ9"/>
+                                </constraints>
+                                <blurEffect style="light"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="pJ3-dU-52b" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="AgK-ZY-3Pm"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="pJ3-dU-52b" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="Jqj-qL-Mmz"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="za4-Wp-owb" secondAttribute="bottom" constant="30" id="NGR-1Y-loc"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="oTW-gO-jUn" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="30" id="a1w-fd-wCY"/>
                             <constraint firstItem="oTW-gO-jUn" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="d7R-JG-adN"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
+                            <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="za4-Wp-owb" secondAttribute="trailing" constant="30" id="vCF-pt-jpK"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
+                        <outlet property="buttonIndicator" destination="pAf-2o-nLA" id="4Km-zb-le3"/>
+                        <outlet property="buttonPanel" destination="za4-Wp-owb" id="3fk-p3-Pmi"/>
                         <outlet property="loadingIndicator" destination="w2N-rj-E77" id="6v0-to-9Xz"/>
                         <outlet property="loadingPanel" destination="pJ3-dU-52b" id="qUS-qK-P0g"/>
                         <outlet property="messageLabel" destination="jeS-HM-XAx" id="8jN-iN-feQ"/>
@@ -143,4 +193,7 @@
             <point key="canvasLocation" x="139" y="108"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow.clockwise" catalog="system" width="56" height="64"/>
+    </resources>
 </document>
