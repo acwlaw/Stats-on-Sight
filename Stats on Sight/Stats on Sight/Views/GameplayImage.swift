@@ -54,6 +54,8 @@ class GameplayImage {
     /// - Tag: AddVisualizationNode
     func add(_ anchor: ARAnchor, node: SCNNode) {
         if !hasAddedScores, let planeAnchor = anchor as? ARPlaneAnchor {
+            print("Adding views to the vertical plane...")
+            
             self.anchor = planeAnchor
             hasAddedScores = true
             
@@ -64,6 +66,8 @@ class GameplayImage {
                 print("Couldn't get the payload dawg 🐶")
                 return
             }
+            
+            
 
             // Top Label
             let teamAndScoreText = "\(payload.awayTeam.abbreviation)   \(payload.homeTeam.abbreviation)\n" + " \(payload.awayTeam.goals)  -  \(payload.homeTeam.goals) "
@@ -109,7 +113,7 @@ class GameplayImage {
             node.addChildNode(rightTextNode)
             node.addChildNode(leftTextNode)
         } else {
-            print("FAIL")
+            print("Unable to get the vertical plane anchor.")
         }
     }
     

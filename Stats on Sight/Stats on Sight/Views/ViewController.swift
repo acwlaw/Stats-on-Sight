@@ -108,6 +108,7 @@ class ViewController: UIViewController {
     
     /// - Tag: ImageTrackingSession
     private func runWorldTrackingSession(runOptions: ARSession.RunOptions = [.removeExistingAnchors]) {
+        print("Running world tracking session...")
         let configuration = ARWorldTrackingConfiguration();
 //        let configuration = ARImageTrackingConfiguration()
         configuration.planeDetection = .vertical
@@ -207,6 +208,7 @@ extension ViewController: ARSCNViewDelegate {
 extension ViewController: RectangleDetectorDelegate {
     /// Called when the app recognized a rectangular shape in the user's environment
     func rectangleFound(rectangleContent: CIImage, _ payload: Payload) {
+        print("Found a rectangle")
         hasLoadedGame = true
         DispatchQueue.main.async {
             // Ignore detected rectangles if the app is currently tracking an image.
@@ -227,6 +229,8 @@ extension ViewController: RectangleDetectorDelegate {
                         print("Reference image validation failed: \(error.localizedDescription)")
                         return
                     }
+                    
+                    print("Creating new Gameplay image...")
                     
                     // Try tracking the image that lies within the rectangle which the app just detected.
                     guard let newGameplayImage = GameplayImage(rectangleContent, payload) else { return }

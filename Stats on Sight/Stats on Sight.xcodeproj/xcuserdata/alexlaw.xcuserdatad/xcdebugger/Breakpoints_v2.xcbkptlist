@@ -94,8 +94,8 @@
             filePath = "Stats on Sight/Views/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "rectangleFound(rectangleContent:_:)"
             landmarkType = "7">
          </BreakpointContent>
