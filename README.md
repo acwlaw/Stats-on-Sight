@@ -1,3 +1,6 @@
+Stats On Sight
+This was a project developed at nwHacks 2020 with Arsh Ganda (@arshganda) and Sumeet Grewal (@sumeetgrewal). Find our full devpost article [here](https://devpost.com/software/stats-on-sight), and the repository to the back end app [here](https://github.com/arshganda/stats_on_sight).
+
 ## Inspiration
 For our second time around at nwHacks, we wanted to be adventurous and try our hands at a new piece of tech -- augmented reality. We're all big sports guys and have this problem where we're watching a game at a bar without sound, sometimes far from the screen so we're not getting the usual stats from the announcers over the course of the game. With Stats on Sight we wanted to make live game statistics more digestible from our phones. 
 
@@ -27,3 +30,4 @@ The most technically challenging part of this project was anchoring the stats th
 
 ## What's next for Stats on Sight
 Its evolution into a cool party trick to show friends.
+
