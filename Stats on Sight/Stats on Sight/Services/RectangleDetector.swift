@@ -157,14 +157,12 @@ class RectangleDetector {
             
             guard let data = data else {
                 print("No data")
-                self.initiateSearch()
                 return
             }
             
             print(String(data: data, encoding: String.Encoding.utf8))
                 
             guard let payload = try? JSONDecoder().decode(Payload.self, from: data) else {
-                self.initiateSearch()
                 print("Unable to decode payload")
                 return
             }
