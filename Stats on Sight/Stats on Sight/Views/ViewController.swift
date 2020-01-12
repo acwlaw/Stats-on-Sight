@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     @IBAction func retryButtonTapped(_ sender: Any) {
         delegate?.retrySearch()
     }
-    
+        
     static var instance: ViewController?
     
     weak var delegate: ViewControllerDelegate?
@@ -80,9 +80,11 @@ class ViewController: UIViewController {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-
+        configuration.planeDetection = .vertical
         // Run the view's session
         sceneView.session.run(configuration)
+        sceneView.delegate = self
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -98,19 +100,18 @@ class ViewController: UIViewController {
         gameplayImage = nil
         
         // Restart the session and remove any image anchors that may have been detected previously.
-        runImageTrackingSession(with: [], runOptions: [.removeExistingAnchors, .resetTracking])
+        runWorldTrackingSession(runOptions: [.removeExistingAnchors, .resetTracking])
         
         let messageString = hasLoadedGame ? currentFollowedGameLabelText : "Place Camera at a Live Game"
         showMessage("Place Camera at a Live Game", autoHide: hasLoadedGame)
     }
     
     /// - Tag: ImageTrackingSession
-    private func runImageTrackingSession(with trackingImages: Set<ARReferenceImage>,
-                                         runOptions: ARSession.RunOptions = [.removeExistingAnchors]) {
-        let configuration = ARImageTrackingConfiguration()
-        configuration.maximumNumberOfTrackedImages = 1
-        configuration.trackingImages = trackingImages
-        sceneView.session.run(configuration, options: runOptions)
+    private func runWorldTrackingSession(runOptions: ARSession.RunOptions = [.removeExistingAnchors]) {
+        let configuration = ARWorldTrackingConfiguration();
+//        let configuration = ARImageTrackingConfiguration()
+        configuration.planeDetection = .vertical
+        sceneView.session.run(configuration)
     }
     
     private var messageHideTimer: Timer?
@@ -228,12 +229,12 @@ extension ViewController: RectangleDetectorDelegate {
                     }
                     
                     // Try tracking the image that lies within the rectangle which the app just detected.
-                    guard let newGameplayImage = GameplayImage(rectangleContent, referenceImage: possibleReferenceImage, payload) else { return }
+                    guard let newGameplayImage = GameplayImage(rectangleContent, payload) else { return }
                     newGameplayImage.delegate = self
                     self?.gameplayImage = newGameplayImage
                     
                     // Start the session with the newly recognized image.
-                    self?.runImageTrackingSession(with: [newGameplayImage.referenceImage])
+                    self?.runWorldTrackingSession()
                 }
             } else {
                 print("Need to be iOS greater than 13.0")

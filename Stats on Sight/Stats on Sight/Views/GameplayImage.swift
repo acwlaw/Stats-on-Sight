@@ -26,10 +26,10 @@ class GameplayImage {
     
     var payload: Payload?
     
-    let referenceImage: ARReferenceImage
+    var hasAddedScores: Bool = false
     
     /// A handle to the anchor ARKit assigned the tracked image.
-    private(set) var anchor: ARImageAnchor?
+    private(set) var anchor: ARPlaneAnchor?
     
     /// Stores  a reference to the Core ML output image.
     private var modelOutputImage: CVPixelBuffer?
@@ -45,8 +45,7 @@ class GameplayImage {
     /// Delegate for when image tracking fails.
     weak var delegate: GameplayImageDelegate?
     
-    init?(_ image: CIImage, referenceImage: ARReferenceImage, _ payload: Payload) {
-        self.referenceImage = referenceImage
+    init?(_ image: CIImage, _ payload: Payload) {
         self.payload = payload
         resetImageTrackingTimeout()
     }
@@ -54,8 +53,9 @@ class GameplayImage {
     /// Displays the gamePlay image using the anchor and node provided by ARKit
     /// - Tag: AddVisualizationNode
     func add(_ anchor: ARAnchor, node: SCNNode) {
-        if let imageAnchor = anchor as? ARImageAnchor, imageAnchor.referenceImage == referenceImage {
-            self.anchor = imageAnchor
+        if !hasAddedScores, let planeAnchor = anchor as? ARPlaneAnchor {
+            self.anchor = planeAnchor
+            hasAddedScores = true
             
             // Start the image tracking timeout.
             resetImageTrackingTimeout()
@@ -80,26 +80,26 @@ class GameplayImage {
             setNodePivot(for: &topTextNode, position: .above)
             
             // Right Label
-            let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
-            let rightText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
+            let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
+            let rightText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
             rightText.font = UIFont(name: "Arial", size: 5.0)
             rightText.isWrapped = true
             var rightTextNode = SCNNode(geometry: rightText)
             
-            rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 175.0))
+            rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 200.0))
             rightTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
             rightTextNode.eulerAngles.x = -.pi/2
             
             setNodePivot(for: &rightTextNode, position: .right)
                     
             // Left Label
-            let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
-            let leftText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
+            let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
+            let leftText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
             leftText.font = UIFont(name: "Arial", size: 5.0)
             leftText.isWrapped = true
             var leftTextNode = SCNNode(geometry: leftText)
             
-            leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 175.0))
+            leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 200.0))
             leftTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
             leftTextNode.eulerAngles.x = -.pi/2
             
@@ -150,12 +150,8 @@ class GameplayImage {
      - Tag: AnchorWasUpdated
      */
     func update(_ anchor: ARAnchor) {
-        if let imageAnchor = anchor as? ARImageAnchor, self.anchor == anchor {
-            self.anchor = imageAnchor
-            // Reset the timeout if the app is still tracking an image.
-            if imageAnchor.isTracked {
-                resetImageTrackingTimeout()
-            }
+        if let planeAnchor = anchor as? ARPlaneAnchor, self.anchor == anchor {
+            self.anchor = planeAnchor
         }
     }
     

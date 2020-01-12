@@ -39,16 +39,80 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C60DE803-2188-420F-8271-10D06E765DB9"
+            uuid = "51664B8B-E2E4-42BB-A74D-C943E09F00EF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stats on Sight/Views/GameplayImage.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "GameplayImage"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "51664B8B-E2E4-42BB-A74D-C943E09F00EF - 7dbf662d6d703d73"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Stats_on_Sight.GameplayImage.deinit"
+                  moduleName = "Stats on Sight"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexlaw/Dropbox/Projects/StatsOnSight/Stats%20on%20Sight/Stats%20on%20Sight/Views/GameplayImage.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "51664B8B-E2E4-42BB-A74D-C943E09F00EF - cef19aba9b5180c0"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Stats_on_Sight.GameplayImage.__deallocating_deinit"
+                  moduleName = "Stats on Sight"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexlaw/Dropbox/Projects/StatsOnSight/Stats%20on%20Sight/Stats%20on%20Sight/Views/GameplayImage.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6AA2CC9A-9594-42E5-84C3-1F5CA981D47B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Stats on Sight/Views/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "rectangleFound(rectangleContent:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "60B12A11-5F25-4D43-A65A-848E07825E78"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Stats on Sight/Services/RectangleDetector.swift"
+            filePath = "Stats on Sight/Views/GameplayImage.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "analyzeImage(for:)"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "add(_:node:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

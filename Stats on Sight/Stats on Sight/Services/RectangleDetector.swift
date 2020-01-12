@@ -156,11 +156,9 @@ class RectangleDetector {
             return
         }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+        let uniqueFileName = "file" + UUID().uuidString + ".jpg"
         
-        sendFile(url: url, fileName: "file.jpg", data: imageData) { (data, response, error) in
+        sendFile(url: url, fileName: uniqueFileName, data: imageData) { (data, response, error) in
             self.delegate?.stopAnimatingLoadingIndicator()
             
             guard let data = data else {
@@ -188,7 +186,7 @@ class RectangleDetector {
     
     func sendFile(url: URL, fileName: String, data: Data, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
 
-        var request1: URLRequest = URLRequest(url: url)
+        var request1: URLRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
 
         request1.httpMethod = "POST"
 
