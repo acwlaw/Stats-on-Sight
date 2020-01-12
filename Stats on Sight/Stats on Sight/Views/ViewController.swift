@@ -20,6 +20,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
       
     static var instance: ViewController?
+    var currentFollowedGameLabelText = ""
+    
+    var hasLoadedGame = false {
+        didSet {
+            stopAnimatingLoadingIndicator()
+        }
+    }
     
     /// An object that detects rectangular shapes in the user's environment
     let rectangleDetector = RectangleDetector()
@@ -79,7 +86,8 @@ class ViewController: UIViewController {
         // Restart the session and remove any image anchors that may have been detected previously.
         runImageTrackingSession(with: [], runOptions: [.removeExistingAnchors, .resetTracking])
         
-        showMessage("Place Camera at a Live Game", autoHide: false)
+        let messageString = hasLoadedGame ? currentFollowedGameLabelText : "Place Camera at a Live Game"
+        showMessage("Place Camera at a Live Game", autoHide: hasLoadedGame)
     }
     
     /// - Tag: ImageTrackingSession
@@ -175,6 +183,7 @@ extension ViewController: ARSCNViewDelegate {
 extension ViewController: RectangleDetectorDelegate {
     /// Called when the app recognized a rectangular shape in the user's environment
     func rectangleFound(rectangleContent: CIImage) {
+        hasLoadedGame = true
         DispatchQueue.main.async {
             // Ignore detected rectangles if the app is currently tracking an image.
             guard self.gameplayImage == nil else {
@@ -224,15 +233,27 @@ extension ViewController: RectangleDetectorDelegate {
     }
     
     func showMessage(_ string: String, autohide: Bool) {
+        if hasLoadedGame {
+            currentFollowedGameLabelText = string
+        }
+        
         DispatchQueue.main.async {
             self.showMessage(string, autoHide: autohide)
         }
     }
+
 }
 
 extension ViewController: GameplayImageDelegate {
     func gameplayImageLostTracking(_ gamplayImage: GameplayImage) {
-        searchForNewImageToTrack()
+        if !hasLoadedGame {
+            print("Lost tracking, looking for new image")
+            searchForNewImageToTrack()
+        }
+    }
+    
+    func placeNodeInScene(for node: SCNNode) {
+        sceneView.scene.rootNode.addChildNode(node)
     }
 }
 

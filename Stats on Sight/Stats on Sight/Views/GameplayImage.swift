@@ -12,6 +12,7 @@ import CoreML
 
 protocol GameplayImageDelegate: class {
     func gameplayImageLostTracking(_ gamplayImage: GameplayImage)
+    func placeNodeInScene(for node: SCNNode)
 }
 
 /// - Tag: GameplayImage
@@ -47,8 +48,29 @@ class GameplayImage {
         if let imageAnchor = anchor as? ARImageAnchor, imageAnchor.referenceImage == referenceImage {
             self.anchor = imageAnchor
             
+            
             // Start the image tracking timeout.
             resetImageTrackingTimeout()
+            
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: 0.1, y: 0.1))
+            path.addLine(to: CGPoint(x: 0.1, y: -0.1))
+            path.addLine(to: CGPoint(x: -0.1, y: -0.1))
+            path.addLine(to: CGPoint(x: -0.1, y: 0.1))
+            path.close()
+            
+            let shape = SCNShape(path: path, extrusionDepth: 0.2)
+            let color = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+            shape.firstMaterial?.diffuse.contents = color
+            shape.chamferRadius = 0.1
+            
+            let squareNode = SCNNode(geometry: shape)
+            squareNode.position.z = -1
+            
+            node.addChildNode(squareNode)
+            
+//            delegate?.placeNodeInScene(for: squareNode)
+            
             
 //            // Add the node that displays the altered image to the node graph.
 //            node.addChildNode(visualizationNode)
@@ -58,6 +80,8 @@ class GameplayImage {
 //            if let createdImage = modelOutputImage {
 //                visualizationNode.display(createdImage)
 //            }
+        } else {
+            print("FAIL")
         }
     }
     

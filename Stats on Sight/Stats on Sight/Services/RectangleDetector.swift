@@ -31,7 +31,11 @@ class RectangleDetector {
     weak var delegate: RectangleDetectorDelegate?
     
     init() {
-        self.updateTimer = Timer.scheduledTimer(withTimeInterval: updateInterval, repeats: true, block: { [weak self] _ in
+        initiateSearch()
+    }
+    
+    func initiateSearch() {
+        self.updateTimer = Timer.scheduledTimer(withTimeInterval: self.updateInterval, repeats: true, block: { [weak self] _ in
             if let capturedImage = ViewController.instance?.sceneView.session.currentFrame?.capturedImage {
                 self?.search(in: capturedImage)
             }
@@ -59,10 +63,11 @@ class RectangleDetector {
         request.maximumObservations = 1
         
         // Require rectangles to be reasonably large.
-        request.minimumConfidence = 0.95
+        request.minimumConfidence = 0.90
         
         // Ignore rectangles with a too uneven aspect ratio.
-        request.minimumAspectRatio = 0.5
+        request.minimumAspectRatio = 0.35
+        request.maximumAspectRatio = 0.75
         
         // Ignore rectangles that are skewed too much.
         request.quadratureTolerance = 10
@@ -73,14 +78,12 @@ class RectangleDetector {
         request.usesCPUOnly = false
         
      
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            DispatchQueue.global().async {
-                do {
-                    try handler.perform([request])
-                } catch {
-                    print("Error: Rectangle detection failed - vision request failed.")
-                    
-                }
+        DispatchQueue.global().async {
+            do {
+                try handler.perform([request])
+            } catch {
+                print("Error: Rectangle detection failed - vision request failed.")
+                
             }
         }
         
@@ -126,7 +129,6 @@ class RectangleDetector {
         }
         
         analyzeImage(for: perspectiveImage)
-        delegate?.rectangleFound(rectangleContent: perspectiveImage)
     }
     
     func analyzeImage(for image: CIImage) {
@@ -139,8 +141,9 @@ class RectangleDetector {
             return
         }
         
-        guard let uiImage = image.convertToUIImage().rotate(radians: .pi/2),
-            let imageData = uiImage.jpegData(compressionQuality: 1) else {
+        let uiImage = image.convertToUIImage()
+        
+        guard let imageData = uiImage.jpegData(compressionQuality: 1) else {
             print("Unable to get image data")
             return
         }
@@ -152,12 +155,24 @@ class RectangleDetector {
         sendFile(url: url, fileName: "file.jpg", data: imageData) { (response, data, error) in
             self.delegate?.stopAnimatingLoadingIndicator()
             
-            guard let data = data, let payload = try? JSONDecoder().decode(Payload.self, from: data) else {
+            guard let data = data else {
+                print("No data")
+                self.initiateSearch()
+                return
+            }
+            
+            print(String(data: data, encoding: String.Encoding.utf8))
+                
+            guard let payload = try? JSONDecoder().decode(Payload.self, from: data) else {
+                self.initiateSearch()
                 print("Unable to decode payload")
                 return
             }
             
+            print("RECEIVED PAYLOAD")
+            
             self.delegate?.showMessage("Now following \(payload.homeTeam.name) vs. \(payload.awayTeam.name)", autohide: true)
+            self.delegate?.rectangleFound(rectangleContent: image)
         }
     }
     
