@@ -9,11 +9,12 @@
 import Foundation
 
 class Payload: Decodable {
+    let gameId: String
     let homeTeam: TeamPayload
     let awayTeam: TeamPayload
     
     enum CodingKeys: String, CodingKey {
-        case homeTeam = "home", awayTeam = "away"
+        case gameId, homeTeam = "home", awayTeam = "away"
     }
 }
 

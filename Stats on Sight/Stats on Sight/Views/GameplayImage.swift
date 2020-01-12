@@ -24,8 +24,9 @@ enum Position {
 /// - Tag: GameplayImage
 class GameplayImage {
     
+    var currentNodes: SCNNode?
     var payload: Payload?
-    
+     
     var hasAddedScores: Bool = false
     
     /// A handle to the anchor ARKit assigned the tracked image.
@@ -54,7 +55,7 @@ class GameplayImage {
     /// - Tag: AddVisualizationNode
     func add(_ anchor: ARAnchor, node: SCNNode) {
         if !hasAddedScores, let planeAnchor = anchor as? ARPlaneAnchor {
-            print("Adding views to the vertical plane...")
+            self.currentNodes = node
             
             self.anchor = planeAnchor
             hasAddedScores = true
@@ -66,55 +67,69 @@ class GameplayImage {
                 print("Couldn't get the payload dawg 🐶")
                 return
             }
-            
-            
 
-            // Top Label
-            let teamAndScoreText = "\(payload.awayTeam.abbreviation)   \(payload.homeTeam.abbreviation)\n" + " \(payload.awayTeam.goals)  -  \(payload.homeTeam.goals) "
-            let topText = SCNText(string: teamAndScoreText, extrusionDepth: 0.1)
-            topText.font = UIFont(name: "Arial", size: 15)
-            topText.isWrapped = true
-            topText.alignmentMode = CATextLayerAlignmentMode.center.rawValue
-            var topTextNode = SCNNode(geometry: topText)
-            
-            topText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 100.0))
-            topTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
-            topTextNode.eulerAngles.x = -.pi/2
-            
-            setNodePivot(for: &topTextNode, position: .above)
-            
-            // Right Label
-            let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
-            let rightText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
-            rightText.font = UIFont(name: "Arial", size: 5.0)
-            rightText.isWrapped = true
-            var rightTextNode = SCNNode(geometry: rightText)
-            
-            rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 200.0))
-            rightTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
-            rightTextNode.eulerAngles.x = -.pi/2
-            
-            setNodePivot(for: &rightTextNode, position: .right)
-                    
-            // Left Label
-            let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
-            let leftText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
-            leftText.font = UIFont(name: "Arial", size: 5.0)
-            leftText.isWrapped = true
-            var leftTextNode = SCNNode(geometry: leftText)
-            
-            leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 200.0))
-            leftTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
-            leftTextNode.eulerAngles.x = -.pi/2
-            
-            setNodePivot(for: &leftTextNode, position: .left)
-            
-            node.addChildNode(topTextNode)
-            node.addChildNode(rightTextNode)
-            node.addChildNode(leftTextNode)
+            updateARViews(with: payload)
+            getNewPayload()
         } else {
             print("Unable to get the vertical plane anchor.")
         }
+    }
+    
+    func updateARViews(with payload: Payload) {
+        print("Adding views to the vertical plane...")
+        
+        guard let node = currentNodes else {
+            print("Couldn't find nodes")
+            return
+        }
+        
+        node.childNodes.map({ $0.removeFromParentNode() })
+        
+        // Top Label
+        let teamAndScoreText = "\(payload.awayTeam.abbreviation)   \(payload.homeTeam.abbreviation)\n" + " \(payload.awayTeam.goals)  -  \(payload.homeTeam.goals) "
+        let topText = SCNText(string: teamAndScoreText, extrusionDepth: 0.1)
+        topText.font = UIFont(name: "Arial", size: 15)
+        topText.isWrapped = true
+        topText.alignmentMode = CATextLayerAlignmentMode.center.rawValue
+        var topTextNode = SCNNode(geometry: topText)
+        
+        topText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 100.0))
+        topTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        topTextNode.eulerAngles.x = -.pi/2
+        
+        setNodePivot(for: &topTextNode, position: .above)
+        
+        // Right Label
+        let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
+        let rightText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
+        rightText.font = UIFont(name: "Arial", size: 5.0)
+        rightText.isWrapped = true
+        var rightTextNode = SCNNode(geometry: rightText)
+        
+        rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 200.0))
+        rightTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        rightTextNode.eulerAngles.x = -.pi/2
+        
+        setNodePivot(for: &rightTextNode, position: .right)
+                
+        // Left Label
+        let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
+        let leftText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
+        leftText.font = UIFont(name: "Arial", size: 5.0)
+        leftText.isWrapped = true
+        var leftTextNode = SCNNode(geometry: leftText)
+        
+        leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 200.0))
+        leftTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        leftTextNode.eulerAngles.x = -.pi/2
+        
+        setNodePivot(for: &leftTextNode, position: .left)
+        
+        node.addChildNode(topTextNode)
+        node.addChildNode(rightTextNode)
+        node.addChildNode(leftTextNode)
+        
+        print("Added view to plane")
     }
     
     func setNodePivot(for node: inout SCNNode, position: Position) {
@@ -145,7 +160,49 @@ class GameplayImage {
         return result
     }
     
-    
+    func getNewPayload() {
+        print("Starting to get new payload...")
+        
+        
+        guard let payload = payload else {
+            print("Couldn't get payload therefore no game id")
+            return
+        }
+        
+        let stringUrl: String = "http://stats-on-sight.appspot.com/game?gameId=" + String(payload.gameId)
+        
+        guard let url = URL(string: stringUrl) else {
+            print("Couldn't get URL from provided string")
+            return
+        }
+        
+        let urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5)
+        let session = URLSession(configuration: .default)
+        
+        let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { (timer) in
+            let task = session.dataTask(with: urlRequest) { (data, response, error) in
+                guard let data = data else {
+                    print("No live game data received")
+                    return
+                }
+                
+                guard let payload = try? JSONDecoder().decode(Payload.self, from: data) else {
+                    print("Unable to decode payload")
+                    return
+                }
+                
+                print("Retrieving new payload...")
+                print(String(data: data, encoding: String.Encoding.utf8))
+                
+                self.payload = payload
+                self.updateARViews(with: payload)
+            }
+            
+            task.resume()
+        }
+        
+        timer.fire()
+    }
     
     /**
      If an image the app was tracking is no longer tracked for a given amount of time, invalidate

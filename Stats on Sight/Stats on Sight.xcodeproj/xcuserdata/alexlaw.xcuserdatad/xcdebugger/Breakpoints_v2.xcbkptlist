@@ -23,22 +23,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7613C52D-50B1-42CF-BE48-B8536DD7212F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Stats on Sight/Views/ViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "retryButtonTapped(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "51664B8B-E2E4-42BB-A74D-C943E09F00EF"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -103,16 +87,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "60B12A11-5F25-4D43-A65A-848E07825E78"
+            uuid = "6F517AF0-1C08-41B2-9C84-55BC6989D1CC"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Stats on Sight/Views/GameplayImage.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "add(_:node:)"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "getNewPayload()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
