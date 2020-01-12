@@ -15,6 +15,9 @@ class ViewController: UIViewController {
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var messagePanel: UIView!
     @IBOutlet weak var messageLabel: UILabel!
+    
+    @IBOutlet weak var loadingPanel: UIView!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
       
     static var instance: ViewController?
     
@@ -22,7 +25,7 @@ class ViewController: UIViewController {
     let rectangleDetector = RectangleDetector()
     
     /// An object that represents an augmented image that exists in the user's environment.
-   var gameplayImage: GameplayImage?
+    var gameplayImage: GameplayImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,6 +116,15 @@ class ViewController: UIViewController {
             })
         }
     }
+    
+    private func setLoadingHidden(_ hide: Bool) {
+        loadingPanel.isHidden = hide
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState], animations: {
+                self.loadingPanel.alpha = hide ? 0 : 1
+            })
+        }
+    }
 }
 
 extension ViewController: ARSCNViewDelegate {
@@ -150,7 +162,6 @@ extension ViewController: ARSCNViewDelegate {
         let errorMessage = messages.compactMap({ $0 }).joined(separator: "\n")
         
         DispatchQueue.main.async {
-            
             // Present an alert informing about the error that just occurred.
             let alertController = UIAlertController(title: "The AR session failed.", message: errorMessage, preferredStyle: .alert)
             let restartAction = UIAlertAction(title: "Restart Session", style: .default) { _ in
@@ -199,6 +210,16 @@ extension ViewController: RectangleDetectorDelegate {
             }
         }
     }
+    
+    func startAnimatingLoadingIndicator() {
+        loadingIndicator.startAnimating()
+        setLoadingHidden(false)
+    }
+    
+    func stopAnimatingLoadingIndicator() {
+        loadingIndicator.stopAnimating()
+        setLoadingHidden(true)
+    }
 }
 
 extension ViewController: GameplayImageDelegate {
@@ -206,3 +227,4 @@ extension ViewController: GameplayImageDelegate {
         searchForNewImageToTrack()
     }
 }
+

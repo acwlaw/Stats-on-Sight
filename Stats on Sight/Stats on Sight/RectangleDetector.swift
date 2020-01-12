@@ -13,6 +13,8 @@ import UIKit
 
 protocol RectangleDetectorDelegate: class {
     func rectangleFound(rectangleContent: CIImage)
+    func startAnimatingLoadingIndicator()
+    func stopAnimatingLoadingIndicator()
 }
 
 class RectangleDetector {
@@ -69,6 +71,7 @@ class RectangleDetector {
         // `usesCPUOnly` if your app does a lot of rendering, or runs a complicated neural network.
         request.usesCPUOnly = false
         
+     
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             DispatchQueue.global().async {
                 do {
@@ -79,6 +82,7 @@ class RectangleDetector {
                 }
             }
         }
+        
     }
     
     /// Check for a rectangle result.
@@ -125,6 +129,10 @@ class RectangleDetector {
     }
     
     func analyzeImage(for image: CIImage) {
+        DispatchQueue.main.async {
+            self.delegate?.startAnimatingLoadingIndicator()
+        }
+        
         guard let url = URL(string: "http://stats-on-sight.appspot.com/upload") else {
             print("Unable to create a URL from given string")
             return
@@ -141,6 +149,9 @@ class RectangleDetector {
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         
         sendFile(url: url, fileName: "file.jpg", data: imageData) { (response, data, error) in
+            DispatchQueue.main.async {
+                self.delegate?.stopAnimatingLoadingIndicator()
+            }
             print("RESPONSE: \(String(describing: response))")
             print("DATA: \(String(data: data!, encoding: String.Encoding.utf8))")
         }
