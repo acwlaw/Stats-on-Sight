@@ -21,9 +21,10 @@ class TeamPayload: Decodable {
     let name: String
     let onIce: [Players]
     let goals: Int
+    let abbreviation: String
     
     enum CodingKeys: String, CodingKey {
-        case name, onIce, goals
+        case name, onIce, goals, abbreviation
     }
 }
 

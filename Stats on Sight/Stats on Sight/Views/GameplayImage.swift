@@ -66,9 +66,11 @@ class GameplayImage {
             }
 
             // Top Label
-            let topText = SCNText(string: "\(payload.homeTeam.goals) - \(payload.awayTeam.goals)", extrusionDepth: 0.1)
-            topText.font = UIFont(name: "System", size: 20)
+            let teamAndScoreText = "\(payload.awayTeam.abbreviation)   \(payload.homeTeam.abbreviation)\n" + " \(payload.awayTeam.goals)  -  \(payload.homeTeam.goals) "
+            let topText = SCNText(string: teamAndScoreText, extrusionDepth: 0.1)
+            topText.font = UIFont(name: "Arial", size: 15)
             topText.isWrapped = true
+            topText.alignmentMode = CATextLayerAlignmentMode.center.rawValue
             var topTextNode = SCNNode(geometry: topText)
             
             topText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 100.0))
@@ -78,8 +80,8 @@ class GameplayImage {
             setNodePivot(for: &topTextNode, position: .above)
             
             // Right Label
-            let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
-            let rightText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
+            let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
+            let rightText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
             rightText.font = UIFont(name: "Arial", size: 5.0)
             rightText.isWrapped = true
             var rightTextNode = SCNNode(geometry: rightText)
@@ -91,8 +93,8 @@ class GameplayImage {
             setNodePivot(for: &rightTextNode, position: .right)
                     
             // Left Label
-            let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
-            let leftText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
+            let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
+            let leftText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
             leftText.font = UIFont(name: "Arial", size: 5.0)
             leftText.isWrapped = true
             var leftTextNode = SCNNode(geometry: leftText)
