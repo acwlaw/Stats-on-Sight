@@ -24,6 +24,8 @@ enum Position {
 /// - Tag: GameplayImage
 class GameplayImage {
     
+    var payload: Payload?
+    
     let referenceImage: ARReferenceImage
     
     /// A handle to the anchor ARKit assigned the tracked image.
@@ -43,8 +45,9 @@ class GameplayImage {
     /// Delegate for when image tracking fails.
     weak var delegate: GameplayImageDelegate?
     
-    init?(_ image: CIImage, referenceImage: ARReferenceImage) {
+    init?(_ image: CIImage, referenceImage: ARReferenceImage, _ payload: Payload) {
         self.referenceImage = referenceImage
+        self.payload = payload
         resetImageTrackingTimeout()
     }
     
@@ -56,9 +59,14 @@ class GameplayImage {
             
             // Start the image tracking timeout.
             resetImageTrackingTimeout()
+            
+            guard let payload = payload else {
+                print("Couldn't get the payload dawg 🐶")
+                return
+            }
 
             // Top Label
-            let topText = SCNText(string: "5 - 1", extrusionDepth: 0.1)
+            let topText = SCNText(string: "\(payload.homeTeam.goals) - \(payload.awayTeam.goals)", extrusionDepth: 0.1)
             topText.font = UIFont(name: "System", size: 20)
             topText.isWrapped = true
             var topTextNode = SCNNode(geometry: topText)
@@ -70,24 +78,26 @@ class GameplayImage {
             setNodePivot(for: &topTextNode, position: .above)
             
             // Right Label
-            let rightText = SCNText(string: "13 14 15 16 17", extrusionDepth: 0.1)
-            rightText.font = UIFont(name: "System", size: 5.0)
+            let homePlayersOnIce = getPlayersOnIceString(onIce: payload.homeTeam.onIce)
+            let rightText = SCNText(string: homePlayersOnIce, extrusionDepth: 0.1)
+            rightText.font = UIFont(name: "Arial", size: 5.0)
             rightText.isWrapped = true
             var rightTextNode = SCNNode(geometry: rightText)
             
-            rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 15.0, height: 150.0))
+            rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 175.0))
             rightTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
             rightTextNode.eulerAngles.x = -.pi/2
             
             setNodePivot(for: &rightTextNode, position: .right)
                     
             // Left Label
-            let leftText = SCNText(string: "31 41 51 61 71", extrusionDepth: 0.1)
-            leftText.font = UIFont(name: "System", size: 5.0)
+            let awayPlayersOnIce = getPlayersOnIceString(onIce: payload.awayTeam.onIce)
+            let leftText = SCNText(string: awayPlayersOnIce, extrusionDepth: 0.1)
+            leftText.font = UIFont(name: "Arial", size: 5.0)
             leftText.isWrapped = true
             var leftTextNode = SCNNode(geometry: leftText)
             
-            leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 15.0, height: 150.0))
+            leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 45.0, height: 175.0))
             leftTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
             leftTextNode.eulerAngles.x = -.pi/2
             
@@ -118,6 +128,15 @@ class GameplayImage {
         }
         
         node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+    }
+    
+    func getPlayersOnIceString(onIce: [Players]) -> String {
+        var result = "On Ice:\n"
+        for player in onIce {
+            result += player.positionCode + ": " + player.number + "\n"
+        }
+        
+        return result
     }
     
     

@@ -12,7 +12,7 @@ import CoreImage
 import UIKit
 
 protocol RectangleDetectorDelegate: class {
-    func rectangleFound(rectangleContent: CIImage)
+    func rectangleFound(rectangleContent: CIImage, _ payload: Payload)
     func startAnimatingLoadingIndicator()
     func stopAnimatingLoadingIndicator()
     func showMessage(_ string: String, autohide: Bool)
@@ -182,7 +182,7 @@ class RectangleDetector {
             print("RECEIVED PAYLOAD")
             
             self.delegate?.showMessage("Now following \(payload.homeTeam.name) vs. \(payload.awayTeam.name)", autohide: true)
-            self.delegate?.rectangleFound(rectangleContent: image)
+            self.delegate?.rectangleFound(rectangleContent: image, payload)
         }
     }
     

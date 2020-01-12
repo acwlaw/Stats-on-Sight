@@ -20,17 +20,19 @@ class Payload: Decodable {
 class TeamPayload: Decodable {
     let name: String
     let onIce: [Players]
+    let goals: Int
     
     enum CodingKeys: String, CodingKey {
-        case name, onIce
+        case name, onIce, goals
     }
 }
 
 class Players: Decodable {
     let fullName: String
     let number: String
+    let positionCode: String
     
     enum CodingKeys: String, CodingKey {
-        case fullName, number
+        case fullName, number, positionCode
     }
 }

@@ -205,7 +205,7 @@ extension ViewController: ARSCNViewDelegate {
 
 extension ViewController: RectangleDetectorDelegate {
     /// Called when the app recognized a rectangular shape in the user's environment
-    func rectangleFound(rectangleContent: CIImage) {
+    func rectangleFound(rectangleContent: CIImage, _ payload: Payload) {
         hasLoadedGame = true
         DispatchQueue.main.async {
             // Ignore detected rectangles if the app is currently tracking an image.
@@ -228,7 +228,7 @@ extension ViewController: RectangleDetectorDelegate {
                     }
                     
                     // Try tracking the image that lies within the rectangle which the app just detected.
-                    guard let newGameplayImage = GameplayImage(rectangleContent, referenceImage: possibleReferenceImage) else { return }
+                    guard let newGameplayImage = GameplayImage(rectangleContent, referenceImage: possibleReferenceImage, payload) else { return }
                     newGameplayImage.delegate = self
                     self?.gameplayImage = newGameplayImage
                     
