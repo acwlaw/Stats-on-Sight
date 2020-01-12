@@ -15,6 +15,7 @@ protocol RectangleDetectorDelegate: class {
     func rectangleFound(rectangleContent: CIImage)
     func startAnimatingLoadingIndicator()
     func stopAnimatingLoadingIndicator()
+    func showMessage(_ string: String, autohide: Bool)
 }
 
 class RectangleDetector {
@@ -149,11 +150,14 @@ class RectangleDetector {
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         
         sendFile(url: url, fileName: "file.jpg", data: imageData) { (response, data, error) in
-            DispatchQueue.main.async {
-                self.delegate?.stopAnimatingLoadingIndicator()
+            self.delegate?.stopAnimatingLoadingIndicator()
+            
+            guard let data = data, let payload = try? JSONDecoder().decode(Payload.self, from: data) else {
+                print("Unable to decode payload")
+                return
             }
-            print("RESPONSE: \(String(describing: response))")
-            print("DATA: \(String(data: data!, encoding: String.Encoding.utf8))")
+            
+            self.delegate?.showMessage("Now following \(payload.homeTeam.name) vs. \(payload.awayTeam.name)", autohide: true)
         }
     }
     

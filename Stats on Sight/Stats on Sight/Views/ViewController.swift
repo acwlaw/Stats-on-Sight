@@ -79,9 +79,7 @@ class ViewController: UIViewController {
         // Restart the session and remove any image anchors that may have been detected previously.
         runImageTrackingSession(with: [], runOptions: [.removeExistingAnchors, .resetTracking])
         
-        showMessage("Look for a screen.", autoHide: false)
-        
-        print("LOOKING FOR SCREEN")
+        showMessage("Place Camera at a Live Game", autoHide: false)
     }
     
     /// - Tag: ImageTrackingSession
@@ -212,13 +210,23 @@ extension ViewController: RectangleDetectorDelegate {
     }
     
     func startAnimatingLoadingIndicator() {
-        loadingIndicator.startAnimating()
-        setLoadingHidden(false)
+        DispatchQueue.main.async {
+            self.loadingIndicator.startAnimating()
+            self.setLoadingHidden(false)
+        }
     }
     
     func stopAnimatingLoadingIndicator() {
-        loadingIndicator.stopAnimating()
-        setLoadingHidden(true)
+        DispatchQueue.main.async {
+            self.loadingIndicator.stopAnimating()
+            self.setLoadingHidden(true)
+        }
+    }
+    
+    func showMessage(_ string: String, autohide: Bool) {
+        DispatchQueue.main.async {
+            self.showMessage(string, autoHide: autohide)
+        }
     }
 }
 

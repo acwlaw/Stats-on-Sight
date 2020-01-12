@@ -15,6 +15,7 @@
 		CF5A5BA823CA67AC0048209C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF5A5BA623CA67AC0048209C /* LaunchScreen.storyboard */; };
 		CF5A5BB323CA67AD0048209C /* Stats_on_SightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5A5BB223CA67AD0048209C /* Stats_on_SightTests.swift */; };
 		CF5A5BBE23CA67AD0048209C /* Stats_on_SightUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5A5BBD23CA67AD0048209C /* Stats_on_SightUITests.swift */; };
+		CF89E7BB23CAEEB30034DD00 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF89E7BA23CAEEB30034DD00 /* Payload.swift */; };
 		CFF7191F23CA9BDA00164BCB /* RectangleDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF7191E23CA9BDA00164BCB /* RectangleDetector.swift */; };
 		CFF7192123CAA66D00164BCB /* GameplayImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF7192023CAA66D00164BCB /* GameplayImage.swift */; };
 		CFF7192323CAAA8200164BCB /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF7192223CAAA8200164BCB /* Utilities.swift */; };
@@ -52,6 +53,7 @@
 		CF5A5BB923CA67AD0048209C /* Stats on SightUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stats on SightUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF5A5BBD23CA67AD0048209C /* Stats_on_SightUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats_on_SightUITests.swift; sourceTree = "<group>"; };
 		CF5A5BBF23CA67AD0048209C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF89E7BA23CAEEB30034DD00 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
 		CFF7191E23CA9BDA00164BCB /* RectangleDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangleDetector.swift; sourceTree = "<group>"; };
 		CFF7192023CAA66D00164BCB /* GameplayImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameplayImage.swift; sourceTree = "<group>"; };
 		CFF7192223CAAA8200164BCB /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -105,16 +107,14 @@
 		CF5A5B9A23CA67AB0048209C /* Stats on Sight */ = {
 			isa = PBXGroup;
 			children = (
+				CF89E7B923CAEE360034DD00 /* Models */,
+				CF89E7B823CAEE280034DD00 /* Views */,
+				CF89E7B723CAEE1A0034DD00 /* Storyboards */,
+				CF89E7B623CAEE030034DD00 /* Services */,
 				CF5A5B9B23CA67AB0048209C /* AppDelegate.swift */,
 				CF5A5B9D23CA67AB0048209C /* art.scnassets */,
-				CF5A5B9F23CA67AB0048209C /* ViewController.swift */,
-				CFF7191E23CA9BDA00164BCB /* RectangleDetector.swift */,
-				CF5A5BA123CA67AB0048209C /* Main.storyboard */,
 				CF5A5BA423CA67AC0048209C /* Assets.xcassets */,
-				CF5A5BA623CA67AC0048209C /* LaunchScreen.storyboard */,
 				CF5A5BA923CA67AC0048209C /* Info.plist */,
-				CFF7192023CAA66D00164BCB /* GameplayImage.swift */,
-				CFF7192223CAAA8200164BCB /* Utilities.swift */,
 			);
 			path = "Stats on Sight";
 			sourceTree = "<group>";
@@ -135,6 +135,41 @@
 				CF5A5BBF23CA67AD0048209C /* Info.plist */,
 			);
 			path = "Stats on SightUITests";
+			sourceTree = "<group>";
+		};
+		CF89E7B623CAEE030034DD00 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CFF7191E23CA9BDA00164BCB /* RectangleDetector.swift */,
+				CFF7192223CAAA8200164BCB /* Utilities.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		CF89E7B723CAEE1A0034DD00 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				CF5A5BA123CA67AB0048209C /* Main.storyboard */,
+				CF5A5BA623CA67AC0048209C /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		CF89E7B823CAEE280034DD00 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CF5A5B9F23CA67AB0048209C /* ViewController.swift */,
+				CFF7192023CAA66D00164BCB /* GameplayImage.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CF89E7B923CAEE360034DD00 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CF89E7BA23CAEEB30034DD00 /* Payload.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF89E7BB23CAEEB30034DD00 /* Payload.swift in Sources */,
 				CFF7191F23CA9BDA00164BCB /* RectangleDetector.swift in Sources */,
 				CFF7192123CAA66D00164BCB /* GameplayImage.swift in Sources */,
 				CF5A5BA023CA67AB0048209C /* ViewController.swift in Sources */,
