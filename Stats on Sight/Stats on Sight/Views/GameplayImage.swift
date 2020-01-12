@@ -15,6 +15,12 @@ protocol GameplayImageDelegate: class {
     func placeNodeInScene(for node: SCNNode)
 }
 
+enum Position {
+    case above
+    case right
+    case left
+}
+
 /// - Tag: GameplayImage
 class GameplayImage {
     
@@ -48,72 +54,73 @@ class GameplayImage {
         if let imageAnchor = anchor as? ARImageAnchor, imageAnchor.referenceImage == referenceImage {
             self.anchor = imageAnchor
             
-            
             // Start the image tracking timeout.
             resetImageTrackingTimeout()
-            let plane = SCNPlane(width: CGFloat(referenceImage.physicalSize.width),
-                                     height: CGFloat(referenceImage.physicalSize.height))
+
+            // Top Label
+            let topText = SCNText(string: "5 - 1", extrusionDepth: 0.1)
+            topText.font = UIFont(name: "System", size: 20)
+            topText.isWrapped = true
+            var topTextNode = SCNNode(geometry: topText)
             
-            let planeNode = SCNNode(geometry: plane)
-            planeNode.simdTransform = simd_float4x4(SCNMatrix4MakeTranslation(0, 0, -0.355))
-            planeNode.eulerAngles.x = -.pi/2
+            topText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 100.0))
+            topTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+            topTextNode.eulerAngles.x = -.pi/2
             
-            let text = SCNText(string: "5 - 1", extrusionDepth: 0.1)
-            text.font = UIFont(name: "Arial", size: 20)
-            text.isWrapped = true
-            let textNode = SCNNode(geometry: text)
+            setNodePivot(for: &topTextNode, position: .above)
             
-            text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 100.0))
-            textNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+            // Right Label
+            let rightText = SCNText(string: "13 14 15 16 17", extrusionDepth: 0.1)
+            rightText.font = UIFont(name: "System", size: 5.0)
+            rightText.isWrapped = true
+            var rightTextNode = SCNNode(geometry: rightText)
             
+            rightText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 15.0, height: 150.0))
+            rightTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+            rightTextNode.eulerAngles.x = -.pi/2
             
-            textNode.eulerAngles.x = -.pi/2
-//            textNode.simdTransform = simd_float4x4(SCNMatrix4MakeTranslation(0, 0, -0.355))
-//            textNode.simdTransform = simd_float4x4(SCNMatrix4MakeTranslation(0, 0, 0))
+            setNodePivot(for: &rightTextNode, position: .right)
+                    
+            // Left Label
+            let leftText = SCNText(string: "31 41 51 61 71", extrusionDepth: 0.1)
+            leftText.font = UIFont(name: "System", size: 5.0)
+            leftText.isWrapped = true
+            var leftTextNode = SCNNode(geometry: leftText)
             
-            let (min, max) = textNode.boundingBox
+            leftText.containerFrame = CGRect(origin: .zero, size: CGSize(width: 15.0, height: 150.0))
+            leftTextNode.scale = SCNVector3Make(0.01, 0.01, 0.01)
+            leftTextNode.eulerAngles.x = -.pi/2
             
-            let dx = min.x + 0.5 * (max.x - min.x)
-            let dy = min.y + 0.5 * (max.y - min.y) - 25
-            let dz = min.z + 0.5 * (max.z - min.z)
-            textNode.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+            setNodePivot(for: &leftTextNode, position: .left)
             
-            
-            
-            
-//            let path = UIBezierPath()
-//            path.move(to: CGPoint(x: 0.1, y: 0.1))
-//            path.addLine(to: CGPoint(x: 0.1, y: -0.1))
-//            path.addLine(to: CGPoint(x: -0.1, y: -0.1))
-//            path.addLine(to: CGPoint(x: -0.1, y: 0.1))
-//            path.close()
-//
-//            let shape = SCNShape(path: path, extrusionDepth: 0.2)
-//            let color = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-//            shape.firstMaterial?.diffuse.contents = color
-//            shape.chamferRadius = 0.1
-//
-//            let squareNode = SCNNode(geometry: shape)
-//            squareNode.position.z = -1
-            
-//            node.addChildNode(planeNode)
-            node.addChildNode(textNode)
-            
-//            delegate?.placeNodeInScene(for: squareNode)
-            
-            
-//            // Add the node that displays the altered image to the node graph.
-//            node.addChildNode(visualizationNode)
-//
-//            // If altering the first image completed before the
-//            //  anchor was added, display that image now.
-//            if let createdImage = modelOutputImage {
-//                visualizationNode.display(createdImage)
-//            }
+            node.addChildNode(topTextNode)
+            node.addChildNode(rightTextNode)
+            node.addChildNode(leftTextNode)
         } else {
             print("FAIL")
         }
     }
+    
+    func setNodePivot(for node: inout SCNNode, position: Position) {
+        let (min, max) = node.boundingBox
+        
+        var dx = min.x + 0.5 * (max.x - min.x)
+        var dy = min.y + 0.5 * (max.y - min.y)
+        let dz = min.z + 0.5 * (max.z - min.z)
+        
+        switch position {
+        case .above:
+            dy = min.y + 0.5 * (max.y - min.y) - 25
+        case .right:
+            dx = min.x + 0.5 * (max.x - min.x) - 35
+        case .left:
+            dx = min.x + 0.5 * (max.x - min.x) + 35
+        }
+        
+        node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+    }
+    
+    
     
     /**
      If an image the app was tracking is no longer tracked for a given amount of time, invalidate
